@@ -75,7 +75,7 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
           icon: Icon(
             Icons.group,
           ),
-          label: '모임임',
+          label: '모임',
         ),
       ],
     );
