@@ -73,9 +73,9 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.person,
+            Icons.group,
           ),
-          label: '내정보',
+          label: '모임',
         ),
       ],
     );
