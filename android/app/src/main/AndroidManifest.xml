@@ -1,9 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <uses-permission android:name="android.permission,INTERNET"/>
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:label="smu_flutter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- google map -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCw20c7QGdviyHuPZ7tXHHFlaQi1808GXQ"
+        />
+
          <!--카카오 로그인 관련-->
         <activity
             android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
