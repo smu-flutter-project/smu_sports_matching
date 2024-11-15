@@ -6,10 +6,10 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- google map -->
+        <!-- 이거 google 실행할때만 너네꺼 api key값 넣고 github에 커밋할때는 다시 안보이게 수정해서 올려줘-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="------"
-<!-- 이거 google 실행할때만 너네꺼 api key값 넣고 github에 커밋할때는 다시 안보이게 수정해서 올려줘-->
+            android:value="AIzaSyCw20c7QGdviyHuPZ7tXHHFlaQi1808GXQ"
         />
 
          <!--카카오 로그인 관련-->
