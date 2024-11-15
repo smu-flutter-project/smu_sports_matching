@@ -9,7 +9,7 @@
         <!-- 이거 google 실행할때만 너네꺼 api key값 넣고 github에 커밋할때는 다시 안보이게 수정해서 올려줘-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCw20c7QGdviyHuPZ7tXHHFlaQi1808GXQ"
+            android:value="=------"
         />
 
          <!--카카오 로그인 관련-->

@@ -10,15 +10,17 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
-  String? selectedTitle;
-  String? selectedSnippet;
-  String? indoorOutdoor;
-  String? selectedDate; // 새로운 변수 추가
-  String? selectedSport; // 새로운 변수 추가
+  String? selectedTitle; // title 변수
+  String? selectedSnippet; // 장소 설명 변수
+  String? indoorOutdoor; // 실내외 변수
+
+  String? selectedDate; // 날짜 변수
+  String? selectedSport; // 스포츠 변수
 
   // 지도 첫 화면 기준이 상명대 정문을 나타냄.
   final LatLng _center = const LatLng(36.832639013904, 127.17668625829);
 
+  // marker들을 list로 표현
   final List<Marker> _markers = [];
 
   @override
@@ -30,7 +32,7 @@ class _MapScreenState extends State<MapScreen> {
   void _initializeMarkers() {
     _markers.addAll([
       Marker(
-        markerId: const MarkerId('상명스포츠센터'),
+        markerId: const MarkerId('place'),
         position: const LatLng(36.83231412298072, 127.1802609270142),
         infoWindow: const InfoWindow(
           title: "상명스포츠센터",
@@ -38,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
         onTap: () => _onMarkerTapped("상명스포츠센터", "수영장, 스쿼시장, 헬스장, 무용실, 골프장", "실내"),
       ),
       Marker(
-        markerId: const MarkerId('운동장'),
+        markerId: const MarkerId('place'),
         position: const LatLng(36.832553789241395, 127.17968417780898),
         infoWindow: const InfoWindow(
           title: "운동장",
@@ -46,7 +48,7 @@ class _MapScreenState extends State<MapScreen> {
         onTap: () => _onMarkerTapped("운동장", "운동장이에유", "실외"),
       ),
       Marker(
-        markerId: const MarkerId('농구장'),
+        markerId: const MarkerId('place'),
         position: const LatLng(36.8320360525678, 127.17941953531056),
         infoWindow: const InfoWindow(
           title: "농구장",
@@ -54,13 +56,14 @@ class _MapScreenState extends State<MapScreen> {
         onTap: () => _onMarkerTapped("농구장", "실외 농구장이어유", "실외"),
       ),
       Marker(
-        markerId: const MarkerId('체육관'),
+        markerId: const MarkerId('place'),
         position: const LatLng(36.83248755837282, 127.17878722906448),
         infoWindow: const InfoWindow(
           title: "체육관",
         ),
         onTap: () => _onMarkerTapped("체육관", "실내 다양해유", "실내"),
       ),
+
       // 사람 마커에 대한 내용
       Marker(
         markerId: const MarkerId('human1'),
@@ -69,7 +72,7 @@ class _MapScreenState extends State<MapScreen> {
           title: "김준하",
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        onTap: () => _onPersonMarkerTapped("김준하", "11월 11일", "축구"), // 새로운 함수 사용
+        onTap: () => _onPersonMarkerTapped("김준하", "11월 11일", "축구"),
       ),
       Marker(
         markerId: const MarkerId('human2'),
@@ -101,6 +104,7 @@ class _MapScreenState extends State<MapScreen> {
     ]);
   }
 
+  // 장소 마커 선택
   void _onMarkerTapped(String title, String snippet, String locationType) {
     setState(() {
       selectedTitle = title;
@@ -111,6 +115,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  // 사람 마커 선택
   void _onPersonMarkerTapped(String title, String date, String sport) {
     setState(() {
       selectedTitle = title;
@@ -121,6 +126,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  // google map
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -128,6 +134,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appbar 제작
       appBar: AppBar(
         title: const Text('상명대학교'),
         backgroundColor: Colors.blue[500],
@@ -142,6 +149,8 @@ class _MapScreenState extends State<MapScreen> {
             ),
             markers: Set<Marker>.of(_markers),
           ),
+
+          // title 값이 없을 경우, 하단에 아무것도 띄우지않음(full map)
           if (selectedTitle != null)
             Align(
               alignment: Alignment.bottomCenter,
@@ -171,11 +180,15 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
+
+                    //사람 마커 선택시
                     if (selectedSnippet != null)
                       Text(
                         selectedSnippet!,
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
+
+                    // 장소 마커 선택시
                     if (selectedDate != null && selectedSport != null)
                       Column(
                         children: [
@@ -191,6 +204,7 @@ class _MapScreenState extends State<MapScreen> {
                         ],
                       ),
                     const SizedBox(height: 8),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
