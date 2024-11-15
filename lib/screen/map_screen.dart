@@ -13,7 +13,10 @@ class _MapScreenState extends State<MapScreen> {
   String? selectedTitle;
   String? selectedSnippet;
   String? indoorOutdoor;
+  String? selectedDate; // 새로운 변수 추가
+  String? selectedSport; // 새로운 변수 추가
 
+  // 지도 첫 화면 기준이 상명대 정문을 나타냄.
   final LatLng _center = const LatLng(36.832639013904, 127.17668625829);
 
   final List<Marker> _markers = [];
@@ -58,6 +61,43 @@ class _MapScreenState extends State<MapScreen> {
         ),
         onTap: () => _onMarkerTapped("체육관", "실내 다양해유", "실내"),
       ),
+      // 사람 마커에 대한 내용
+      Marker(
+        markerId: const MarkerId('human1'),
+        position: const LatLng(36.832139439004465, 127.17639102013793),
+        infoWindow: const InfoWindow(
+          title: "김준하",
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        onTap: () => _onPersonMarkerTapped("김준하", "11월 11일", "축구"), // 새로운 함수 사용
+      ),
+      Marker(
+        markerId: const MarkerId('human2'),
+        position: const LatLng(36.83406247764723, 127.1792471408844),
+        infoWindow: const InfoWindow(
+          title: "김 연",
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        onTap: () => _onPersonMarkerTapped("김 연", "11월 12일", "농구"),
+      ),
+      Marker(
+        markerId: const MarkerId('human3'),
+        position: const LatLng(36.83135749542505, 127.17907011508942),
+        infoWindow: const InfoWindow(
+          title: "김민욱",
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        onTap: () => _onPersonMarkerTapped("김민욱", "11월 13일", "스쿼시"),
+      ),
+      Marker(
+        markerId: const MarkerId('human4'),
+        position: const LatLng(36.83262841961985, 127.181156873703),
+        infoWindow: const InfoWindow(
+          title: "현용찬",
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        onTap: () => _onPersonMarkerTapped("현용찬", "11월 21일", "농구"),
+      ),
     ]);
   }
 
@@ -66,6 +106,18 @@ class _MapScreenState extends State<MapScreen> {
       selectedTitle = title;
       selectedSnippet = snippet;
       indoorOutdoor = locationType;
+      selectedDate = null;
+      selectedSport = null;
+    });
+  }
+
+  void _onPersonMarkerTapped(String title, String date, String sport) {
+    setState(() {
+      selectedTitle = title;
+      selectedDate = date;
+      selectedSport = sport;
+      indoorOutdoor = null;
+      selectedSnippet = null;
     });
   }
 
@@ -90,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             markers: Set<Marker>.of(_markers),
           ),
-          if (selectedTitle != null && selectedSnippet != null)
+          if (selectedTitle != null)
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -119,25 +171,37 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      selectedSnippet!,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                    ),
+                    if (selectedSnippet != null)
+                      Text(
+                        selectedSnippet!,
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                      ),
+                    if (selectedDate != null && selectedSport != null)
+                      Column(
+                        children: [
+                          Text(
+                            selectedDate!,
+                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            selectedSport!,
+                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          ),
+                        ],
+                      ),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text(indoorOutdoor ?? '실내/실외'),
-                        ),
-                        const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
                               selectedTitle = null;
                               selectedSnippet = null;
                               indoorOutdoor = null;
+                              selectedDate = null;
+                              selectedSport = null;
                             });
                           },
                           child: const Text('종료'),
