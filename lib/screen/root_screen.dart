@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smu_flutter/screen/map_screen.dart';
 
 class RootScreen extends StatefulWidget {
