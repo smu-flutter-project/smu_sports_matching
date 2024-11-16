@@ -32,7 +32,7 @@ class _MapScreenState extends State<MapScreen> {
   void _initializeMarkers() {
     _markers.addAll([
       Marker(
-        markerId: const MarkerId('place'),
+        markerId: const MarkerId('place1'),
         position: const LatLng(36.83231412298072, 127.1802609270142),
         infoWindow: const InfoWindow(
           title: "상명스포츠센터",
@@ -40,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
         onTap: () => _onMarkerTapped("상명스포츠센터", "수영장, 스쿼시장, 헬스장, 무용실, 골프장", "실내"),
       ),
       Marker(
-        markerId: const MarkerId('place'),
+        markerId: const MarkerId('place2'),
         position: const LatLng(36.832553789241395, 127.17968417780898),
         infoWindow: const InfoWindow(
           title: "운동장",
@@ -48,7 +48,7 @@ class _MapScreenState extends State<MapScreen> {
         onTap: () => _onMarkerTapped("운동장", "운동장이에유", "실외"),
       ),
       Marker(
-        markerId: const MarkerId('place'),
+        markerId: const MarkerId('place3'),
         position: const LatLng(36.8320360525678, 127.17941953531056),
         infoWindow: const InfoWindow(
           title: "농구장",
@@ -56,7 +56,7 @@ class _MapScreenState extends State<MapScreen> {
         onTap: () => _onMarkerTapped("농구장", "실외 농구장이어유", "실외"),
       ),
       Marker(
-        markerId: const MarkerId('place'),
+        markerId: const MarkerId('place4'),
         position: const LatLng(36.83248755837282, 127.17878722906448),
         infoWindow: const InfoWindow(
           title: "체육관",
@@ -187,6 +187,11 @@ class _MapScreenState extends State<MapScreen> {
                         selectedSnippet!,
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
+                    if (indoorOutdoor != null)
+                      Text(
+                        indoorOutdoor!,
+                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                      ),
 
                     // 장소 마커 선택시
                     if (selectedDate != null && selectedSport != null)
@@ -204,7 +209,6 @@ class _MapScreenState extends State<MapScreen> {
                         ],
                       ),
                     const SizedBox(height: 8),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
