@@ -10,17 +10,14 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
-  TabController? controller; // 사용할 TabController 선언
-
+  TabController? controller;
 
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 3, vsync: this); // ➋
+    controller = TabController(length: 3, vsync: this);
     controller!.addListener(tabListener);
   }
-
-
 
   tabListener() {
     setState(() {});
@@ -28,7 +25,8 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    controller!.removeListener(tabListener); // ➌ listener에 등록한 함수 등록 취소
+    controller!.removeListener(tabListener); // Listener 제거
+    controller!.dispose(); // Controller 해제
     super.dispose();
   }
 
@@ -37,21 +35,23 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
     return Scaffold(
       body: TabBarView(
         controller: controller,
-        children: renderChildren(),
+        physics: const NeverScrollableScrollPhysics(), // 드래그 비활성화
+        children: renderChildren(), // 각 탭에 해당하는 화면 반환
       ),
       bottomNavigationBar: renderBottomNavigation(),
     );
   }
 
+  // 각 탭에 연결될 화면들
   List<Widget> renderChildren() {
     return [
-      const MapScreen(), // Google Map 화면!
-
+      Center(child: Text('달력 화면', style: TextStyle(fontSize: 24))), // 달력
+      const MapScreen(), // 지도 페이지!
+      Center(child: Text('모임 화면', style: TextStyle(fontSize: 24))), // 모임
     ];
   }
 
-
-
+  // BottomNavigationBar
   BottomNavigationBar renderBottomNavigation() {
     return BottomNavigationBar(
       currentIndex: controller!.index,
@@ -62,21 +62,15 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.location_on,
-          ),
-          label: '위치',
+          icon: Icon(Icons.calendar_today),
+          label: '달력',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.calendar_month,
-          ),
-          label: '일정',
+          icon: Icon(Icons.map),
+          label: '지도',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.group,
-          ),
+          icon: Icon(Icons.group),
           label: '모임',
         ),
       ],
