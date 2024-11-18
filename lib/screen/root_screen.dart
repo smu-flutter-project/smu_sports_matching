@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:smu_flutter/screen/map_screen.dart';
+import 'package:smu_flutter/screen/meet_screen.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
     return [
       Center(child: Text('달력 화면', style: TextStyle(fontSize: 24))), // 달력
       const MapScreen(), // 지도 페이지!
-      Center(child: Text('모임 화면', style: TextStyle(fontSize: 24))), // 모임
+      const MeetScreen(), // 모임
     ];
   }
 
