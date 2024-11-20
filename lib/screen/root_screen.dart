@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:smu_flutter/screen/map_screen.dart';
 import 'package:smu_flutter/screen/meet_screen.dart';
+import 'package:smu_flutter/screen/calendar_screen.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
   // 각 탭에 연결될 화면들
   List<Widget> renderChildren() {
     return [
-      Center(child: Text('달력 화면', style: TextStyle(fontSize: 24))), // 달력
+      const CalendarScreen(), // 달력
       const MapScreen(), // 지도 페이지!
       const MeetScreen(), // 모임
     ];

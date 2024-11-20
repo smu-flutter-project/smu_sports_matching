@@ -43,6 +43,16 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_maps_flutter: 2.5.0
   geolocator: 10.1.0
+  table_calendar: ^3.1.2 #Calendar 기능
+  intl: ^0.19.0 # 다국어 지원
+  drift: ^2.21.0 # Drift 플러그인 DB 기능 제공
+  sqlite3_flutter_libs: ^0.5.26 #SQLite 기능 제공
+  path_provider: ^2.1.5 #경로 관리
+  path: ^1.9.0  #경로 관리
+  get_it: ^8.0.2  #프로젝트 전역 의존성 관리(필요한 데이터를 프로젝트 어디서나 접근)
+  dio: ^5.7.0 # 네트워크 요청
+  provider: ^6.1.2 #상태 관리
+  uuid: ^4.5.1 #UUID 생성
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +79,8 @@ flutter:
 
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/img/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
