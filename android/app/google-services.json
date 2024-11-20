@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "629673440614",
+    "project_id": "sportmatching-74def",
+    "storage_bucket": "sportmatching-74def.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629673440614:android:eceb2076b6e7793c9884a7",
+        "android_client_info": {
+          "package_name": "com.smu.sportsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAeWChiBMJFdlv3CiKm7z_3nFUNoG_OL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

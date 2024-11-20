@@ -3,8 +3,12 @@ import 'package:go_router/go_router.dart';
 import "package:smu_flutter/const/colors.dart";
 import 'package:smu_flutter/screen/root_screen.dart';
 import 'package:smu_flutter/screen/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:smu_flutter/firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
