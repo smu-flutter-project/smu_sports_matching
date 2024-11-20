@@ -1,6 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.smu.sportsapp">
    <uses-permission android:name="android.permission,INTERNET"/>
    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:label="smu_flutter"
         android:name="${applicationName}"
@@ -9,7 +11,7 @@
         <!-- 이거 google 실행할때만 너네꺼 api key값 넣고 github에 커밋할때는 다시 안보이게 수정해서 올려줘-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="=------"
+            android:value="AIzaSyCw20c7QGdviyHuPZ7tXHHFlaQi1808GXQ"
         />
 
          <!--카카오 로그인 관련-->
