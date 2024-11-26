@@ -40,7 +40,7 @@ class ChatScreen extends StatelessWidget {
                   onPressed: () {
                     // 메시지 전송 로직
                   },
-                  child: const Text('전송'),
+                  child: const Text('전송하기'),
                 ),
               ],
             ),
