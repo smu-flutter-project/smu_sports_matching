@@ -9,8 +9,17 @@ class MeetScreen extends StatefulWidget {
   State<MeetScreen> createState() => _MeetScreenState();
 }
 
-class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateMixin {
+class _MeetScreenState extends State<MeetScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<Map<String, String>> _teamMeetings = [
+    {'title': '11시 축구할 사람', 'subtitle': '축구 모임'},
+    {'title': '게시판 제목', 'subtitle': '팀별 프로젝트'},
+  ];
+  List<Map<String, String>> _individualMeetings = [
+    {'title': '11/11 14시 현용찬 회의', 'subtitle': '회의 및 개인 프로젝트'},
+    {'title': '11/20 16시 개인 회의', 'subtitle': '프로젝트 회의'},
+  ];
 
   @override
   void initState() {
@@ -24,11 +33,21 @@ class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateM
     super.dispose();
   }
 
+  void _addMeeting(String title, String subtitle, bool isTeamTab) {
+    setState(() {
+      if (isTeamTab) {
+        _teamMeetings.add({'title': title, 'subtitle': subtitle});
+      } else {
+        _individualMeetings.add({'title': title, 'subtitle': subtitle});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('모임'),
+        title: const Text('모임'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -37,13 +56,16 @@ class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateM
           ],
         ),
         actions: [
-          IconButton( // 글쓰기 버튼
+          IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(  // 글쓰기 화면으로 전환
-                  builder: (context) => const WriteScreen(),
+                MaterialPageRoute(
+                  builder: (context) => WriteScreen(
+                    isTeamTab: _tabController.index == 0,
+                    onSave: _addMeeting,
+                  ),
                 ),
               );
             },
@@ -53,9 +75,7 @@ class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateM
       body: TabBarView(
         controller: _tabController,
         children: [
-          // 팀 화면
           _buildTeamTab(),
-          // 개인 화면
           _buildIndividualTab(),
         ],
       ),
@@ -63,26 +83,24 @@ class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildTeamTab() {
-    return ListView(
+    return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      children: [
-        _buildMeetingCard('11시 축구할 사람', '축구 모임'),
-        _buildMeetingCard('게시판 제목', '팀별 프로젝트'),
-        _buildMeetingCard('게시판 제목', '워크샵 팀 구성'),
-        _buildMeetingCard('게시판 제목', '운동 그룹 모집'),
-      ],
+      itemCount: _teamMeetings.length,
+      itemBuilder: (context, index) {
+        final meeting = _teamMeetings[index];
+        return _buildMeetingCard(meeting['title']!, meeting['subtitle']!);
+      },
     );
   }
 
   Widget _buildIndividualTab() {
-    return ListView(
+    return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      children: [
-        _buildMeetingCard('11/11 14시 현용찬 회의', '회의 및 개인 프로젝트'),
-        _buildMeetingCard('11/20 16시 개인 회의', '프로젝트 회의'),
-        _buildMeetingCard('12/01 13시 개인 PT', 'PT 세션 예약'),
-        _buildMeetingCard('12/05 10시 자율 회의', '개인 일정 관리'),
-      ],
+      itemCount: _individualMeetings.length,
+      itemBuilder: (context, index) {
+        final meeting = _individualMeetings[index];
+        return _buildMeetingCard(meeting['title']!, meeting['subtitle']!);
+      },
     );
   }
 
@@ -96,7 +114,7 @@ class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateM
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute( // 채팅 화면으로 이동
+            MaterialPageRoute(
               builder: (context) => const ChatScreen(),
             ),
           );
@@ -105,4 +123,3 @@ class _MeetScreenState extends State<MeetScreen> with SingleTickerProviderStateM
     );
   }
 }
-
