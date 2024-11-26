@@ -105,6 +105,8 @@ class _MeetScreenState extends State<MeetScreen>
   }
 
   Widget _buildMeetingCard(String title, String subtitle) {
+    final chatId = title; // 각 채팅방을 고유하게 식별하는 ID로 설정
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       child: ListTile(
@@ -115,7 +117,7 @@ class _MeetScreenState extends State<MeetScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ChatScreen(),
+              builder: (context) => ChatScreen(chatId: chatId),
             ),
           );
         },
