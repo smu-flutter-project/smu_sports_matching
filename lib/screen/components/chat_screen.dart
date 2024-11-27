@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('채팅 - ${widget.chatId}'),
+        title: Text(' ${widget.chatId}'),
       ),
       body: Column(
         children: [
