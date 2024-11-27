@@ -15,6 +15,10 @@
         />
 
          <!--카카오 로그인 관련-->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="28352c19e374b93489a539774edbd01f" />
+
         <activity
             android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
             android:exported="true">
@@ -23,7 +27,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="kakao141cbbab958115cf9780c3245939ee93" android:host="oauth"/>
+                <data android:scheme="kakao28352c19e374b93489a539774edbd01f" android:host="oauth"/>
             </intent-filter>
         </activity>
         <activity

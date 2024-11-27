@@ -53,6 +53,7 @@ dependencies:
   dio: ^5.7.0 # 네트워크 요청
   provider: ^6.1.2 #상태 관리
   uuid: ^4.5.1 #UUID 생성
+  kakao_flutter_sdk: ^1.9.6
 
 dev_dependencies:
   flutter_test:
