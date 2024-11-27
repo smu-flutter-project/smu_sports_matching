@@ -35,6 +35,7 @@ dependencies:
     # 필요한 경우 다른 Firebase 패키지도 추가 가능
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.17.5
+  google_sign_in: ^6.2.2
 
 
 

@@ -12,7 +12,20 @@
           "package_name": "com.smu.sportsapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "629673440614-smp62tiodfj9r8ml55vne1mcvbql3s4g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smu.sportsapp",
+            "certificate_hash": "7d5d970c7bbddfa1de3bd100b7a7f4f8b3c9a40b"
+          }
+        },
+        {
+          "client_id": "629673440614-r1tk7lniiglfl9cebo3njt2rq2s1s25d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBAeWChiBMJFdlv3CiKm7z_3nFUNoG_OL4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629673440614-r1tk7lniiglfl9cebo3njt2rq2s1s25d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

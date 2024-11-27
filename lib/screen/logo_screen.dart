@@ -11,7 +11,7 @@ class LogoScreen extends StatelessWidget {
           height: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/img/img.png'),
+              image: AssetImage('assets/img/logo.png'),
               fit: BoxFit.cover,
             ),
           ),
