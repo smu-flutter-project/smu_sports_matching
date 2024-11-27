@@ -3,23 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginWidget extends StatelessWidget {
-  const LoginWidget({Key? key}) : super(key: key);
+  LoginWidget({Key? key}) : super(key: key);
 
+  // GoogleSignIn 객체를 초기화하지 않고 선언만 함
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  // Google 로그인 함수
   Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    // Create a new credential
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
 
-    // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  // Google 로그아웃 함수
+  Future<void> signOutGoogle() async {
+    await FirebaseAuth.instance.signOut();
+    await _googleSignIn.signOut();
   }
 
   @override
@@ -33,11 +38,6 @@ class LoginWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.grey.withOpacity(0.3), // 버튼 배경색
-                foregroundColor: Colors.black, // 텍스트 색상 (이전의 primary)
-              ),
-              child: Text("Google Login"),
               onPressed: () async {
                 try {
                   await signInWithGoogle();
@@ -50,6 +50,16 @@ class LoginWidget extends StatelessWidget {
                   );
                 }
               },
+              child: Text("Google Login"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await signOutGoogle();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Logged out successfully')),
+                );
+              },
+              child: Text("Logout"),
             ),
           ],
         ),
