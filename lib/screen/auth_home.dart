@@ -4,13 +4,6 @@ import 'package:smu_flutter/screen/root_screen.dart';
 import 'auth_login.dart';
 import 'package:flutter/cupertino.dart';
 
-// 이거 아래 import는 없어도 대 려원아
-import 'package:firebase_core/firebase_core.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:smu_flutter/screen/auth_screen.dart';
-import 'auth_login.dart';
-
-
 class Authhome extends StatelessWidget{
   const Authhome({Key? key}) : super (key: key);
 

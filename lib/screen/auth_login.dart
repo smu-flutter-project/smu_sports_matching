@@ -118,32 +118,44 @@ class LoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        backgroundColor: Colors.white,
+        centerTitle: true, // 제목을 가운데로 정렬
+        title: const Text(
+          "SMU Sports Matching⚽️",
+          style: TextStyle(
+            fontWeight: FontWeight.bold, // 텍스트를 진하게 설정
+            fontSize: 30,
+          ),
+        ),
+
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Google 로그인 버튼
-            LoginButton(
-              text: "Google Login",
-              color: Colors.blue,
-              onPressed: () => _handleLogin(context, signInWithGoogle),
-            ),
-            // Google 로그아웃 버튼
-            LoginButton(
-              text: "Google Logout",
-              color: Colors.red,
-              onPressed: () => signOutGoogle(context),
-            ),
-            // Kakao 로그인 버튼
-            LoginButton(
-              text: "Kakao Login",
-              color: Colors.amber,
-              onPressed: () => signInWithKakao(context),
-              //=> _handleLogin(context, signInWithKakao),
-            ),
-          ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/img/logo.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 300),
+              LoginButton(
+                text: "Google Login",
+                color: Colors.blue,
+                onPressed: () => _handleLogin(context, signInWithGoogle),
+              ),
+              LoginButton(
+                text: "Kakao Login",
+                color: Colors.amber,
+                onPressed: () => signInWithKakao(context),
+                //=> _handleLogin(context, signInWithKakao),
+              ),
+            ],
+          ),
         ),
       ),
     );
