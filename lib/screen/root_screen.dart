@@ -34,37 +34,9 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  // 로그아웃 함수
-  Future<void> signOutGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    try {
-      await FirebaseAuth.instance.signOut(); // Firebase 로그아웃
-      await googleSignIn.signOut(); // Google 계정 로그아웃
-      print("User signed out successfully");
-      // 로그아웃 후 로그인 화면으로 이동
-      Navigator.pushReplacementNamed(context, "/auth");
-    } catch (e) {
-      print("Error during sign-out: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error during logout: $e')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          // 로그아웃 버튼 추가
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              await signOutGoogle(); // 로그아웃 실행
-            },
-          ),
-        ],
-      ),
       body: TabBarView(
         controller: controller,
         physics: const NeverScrollableScrollPhysics(), // 드래그 비활성화

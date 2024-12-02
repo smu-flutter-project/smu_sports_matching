@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smu_flutter/screen/components/write_screen.dart';
 import 'package:smu_flutter/screen/components/chat_screen.dart';
+import 'package:smu_flutter/screen/auth_logout.dart';
 
 class MeetScreen extends StatefulWidget {
   const MeetScreen({Key? key}) : super(key: key);
@@ -48,6 +49,7 @@ class _MeetScreenState extends State<MeetScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('모임'),
+
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

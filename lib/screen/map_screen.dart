@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:smu_flutter/screen/auth_logout.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -131,6 +135,23 @@ class _MapScreenState extends State<MapScreen> {
     mapController = controller;
   }
 
+  Future<void> _signOutGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    try {
+      await FirebaseAuth.instance.signOut(); // Firebase 로그아웃
+      await googleSignIn.signOut(); // Google 로그아웃
+      print("User signed out successfully");
+
+      // 로그아웃 후 로그인 화면으로 이동
+      Navigator.pushReplacementNamed(context, "/auth");
+    } catch (e) {
+      print("Error during sign-out: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error during logout: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,6 +159,15 @@ class _MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         title: const Text('상명대학교'),
         backgroundColor: Colors.blue[500],
+        actions: [
+          // 로그아웃 버튼 추가
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await _signOutGoogle(); // 로그아웃 실행
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [

@@ -24,7 +24,7 @@ class LogoScreen extends StatelessWidget {
                     bool isAuthenticated = true;
 
                     if (isAuthenticated) {
-                      context.go('/login');
+                      context.go('/root');
                     }
                   },
                   child: Container(

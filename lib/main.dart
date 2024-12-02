@@ -44,10 +44,6 @@ class MyApp extends StatelessWidget {
     initialLocation: '/auth',
     routes: [
       GoRoute(
-        path: '/logo',
-        builder: (context, state) => LogoScreen(),
-      ),
-      GoRoute(
         path: '/auth',
         builder: (context, state) => AuthScreen(),
       ),
