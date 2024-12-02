@@ -36,6 +36,7 @@ dependencies:
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.17.5
   google_sign_in: ^6.2.2
+  kakao_flutter_sdk_user: ^1.9.5 # 카카오 로그인 API 패키지
 
 
 
