@@ -100,83 +100,97 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         title: Text('운동 시설 예약'),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Container(
-                  width: 60,
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${DateFormat('MM').format(_currentDate)}월',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/img/main_background.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white.withOpacity(1),
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 60,
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${DateFormat('MM').format(_currentDate)}월',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: weekDates.map((date) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _currentDate = date;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            SizedBox(height: 4),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: date.day == _currentDate.day
-                                    ? Colors.red
-                                    : Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text(
-                                '${date.day}',
-                                style: TextStyle(
-                                  fontSize: 16,
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: weekDates.map((date) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _currentDate = date;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              SizedBox(height: 4),
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
                                   color: date.day == _currentDate.day
-                                      ? Colors.white
-                                      : Colors.black,
+                                      ? Colors.red
+                                      : Colors.transparent,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  '${date.day}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: date.day == _currentDate.day
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.3),
                 ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: facilities.length,
-              itemBuilder: (context, index) {
-                final facility = facilities[index];
+                child: ListView.builder(
+                  itemCount: facilities.length,
+                  itemBuilder: (context, index) {
+                    final facility = facilities[index];
 
-                return ListTile(
-                  title: Text(facility.name),
-                  subtitle: Text(facility.type),
-                  onTap: () {
-                    _navigateToNextScreen(
-                        facility.name, facility.address, facility.image);
+                    return ListTile(
+                      title: Text(facility.name),
+                      subtitle: Text(facility.type),
+                      onTap: () {
+                        _navigateToNextScreen(
+                            facility.name, facility.address, facility.image);
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -186,6 +200,7 @@ class CalendarScreen2 extends StatefulWidget {
   final String facilityName;
   final String facilityAddress;
   final String facilityImage;
+
   const CalendarScreen2({
     Key? key,
     required this.facilityName,
@@ -212,21 +227,207 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
     });
   }
 
+  void _showGuideDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('이용안내'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '1. 이용대상: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '재학생, 교직원(동반 가족 포함)',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '2. 사용료: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '무료',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '3. 이용방법: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '실내 시설은 안내 데스크에서 학생증 제시 후 입장 가능.',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '4. 운영내용: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Center(
+                child: Image.asset(
+                  'assets/img/information.png',
+                  height: 150,
+                  width: 300,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showRulesDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('이용규칙'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '1. 공지: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '예약 과정에서 이용하려는 스포츠 종목 또는 목적을 꼭 적어주세요.',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '2. 예약 가능 일자: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '일정 확인 후 예약 없는 날짜에 예약 가능',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '3. ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                          '학교 사정으로 인해 예약이 취소 될수도 있으며, 이 경우 전액 환불 조치 외에 다른 보상이 제공되지 않습니다.',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.facilityName),
       ),
-      body: SingleChildScrollView( // 추가: 스크롤 가능하도록 설정
+      body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(widget.facilityImage),
-
               SizedBox(height: 40),
-              // 희망 인기도 표시
               Text(
                 "희망 인기도",
                 style: TextStyle(
@@ -234,16 +435,12 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               SizedBox(height: 20),
-
               Text(
                 getClickCountText(),
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 20),
-
-              // 진행률 표시
               Stack(
                 children: [
                   LinearProgressIndicator(
@@ -252,18 +449,14 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               Text(
                 "다양한 사람들과 같이 즐겨보아요!",
                 style: TextStyle(
                   fontSize: 16,
                 ),
               ),
-
               SizedBox(height: 40),
-
               ElevatedButton(
                 onPressed: _incrementProgress,
                 child: Text(
@@ -275,10 +468,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                 ),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               ),
-
               SizedBox(height: 40),
-
-              // 구장 정보 섹션
               Text(
                 '구장 정보',
                 style: TextStyle(
@@ -287,8 +477,6 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                 ),
               ),
               SizedBox(height: 8),
-
-              // 기존 구장 정보
               Text(
                 widget.facilityAddress,
                 style: TextStyle(
@@ -296,110 +484,18 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
                   color: Colors.black,
                 ),
               ),
-
-              // 추가된 주소 정보
               SizedBox(height: 30),
-
-              Center(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.red[400],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Text(
-                        '이용안내',
-                        style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 8),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '1. 이용대상: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '재학생, 교직원(동반 가족 포함)',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
-                    ),
+                  ElevatedButton(
+                    onPressed: _showGuideDialog,
+                    child: Text('이용안내'),
                   ),
-                  SizedBox(height: 10),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '2. 사용료: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '무료',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
-                    ),
+                  ElevatedButton(
+                    onPressed: _showRulesDialog,
+                    child: Text('이용규칙'),
                   ),
-                  SizedBox(height: 10),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '3. 이용방법: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '실내를 이용해야하는 시설의 경우 안내 ',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: '데스크에서 학생증 제시후 입장(이용)가능 ',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: '안내 데스크가 없는 야외의 경우 관리팀에 문의하여 대관',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  )
                 ],
               ),
             ],
