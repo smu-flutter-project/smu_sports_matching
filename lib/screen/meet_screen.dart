@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:smu_flutter/screen/components/write_screen.dart';
 import 'package:smu_flutter/screen/components/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-// MeetScreen: 모임 화면
+// MeetScreen: 미팅 화면
 class MeetScreen extends StatefulWidget {
   const MeetScreen({Key? key}) : super(key: key);
 
@@ -44,14 +45,16 @@ class _MeetScreenState extends State<MeetScreen>
 
     setState(() {
       _teamMeetings = teamSnapshot.docs
-          .map((doc) => {
+          .map((doc) =>
+      {
         'title': doc['title'] as String,
         'subtitle': doc['subtitle'] as String,
       })
           .toList();
 
       _individualMeetings = individualSnapshot.docs
-          .map((doc) => {
+          .map((doc) =>
+      {
         'title': doc['title'] as String,
         'subtitle': doc['subtitle'] as String,
       })
@@ -59,7 +62,8 @@ class _MeetScreenState extends State<MeetScreen>
     });
   }
 
-  Future<void> _addMeeting(String title, String subtitle, bool isTeamTab) async {
+  Future<void> _addMeeting(String title, String subtitle,
+      bool isTeamTab) async {
     final type = isTeamTab ? 'team' : 'individual';
 
     await FirebaseFirestore.instance.collection('meetings').add({
@@ -80,43 +84,49 @@ class _MeetScreenState extends State<MeetScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('모임', style: TextStyle(
-          fontWeight: FontWeight.bold,  // Set the font weight to bold
-        ),),
-        backgroundColor: Colors.white,
-        bottom: TabBar(
+        appBar: AppBar(
+            title: const Text('모임', style: TextStyle(
+              fontWeight: FontWeight.bold, // Set the font weight to bold
+            ),),
+            backgroundColor: Colors.white,
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: '팀'),
+                Tab(text: '개인'),
+              ],
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  await GoogleSignIn().signOut();
+                  Navigator.pushReplacementNamed(context, "/auth");
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WriteScreen(
+                        isTeamTab: _tabController.index == 0,
+                        onSave: _addMeeting,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ]),
+        body: TabBarView(
           controller: _tabController,
-          tabs: const [
-            Tab(text: '팀'),
-            Tab(text: '개인'),
+          children: [
+            _buildTeamTab(),
+            _buildIndividualTab(),
           ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WriteScreen(
-                    isTeamTab: _tabController.index == 0,
-                    onSave: _addMeeting,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildTeamTab(),
-          _buildIndividualTab(),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildTeamTab() {
