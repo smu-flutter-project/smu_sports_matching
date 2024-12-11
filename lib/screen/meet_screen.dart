@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smu_flutter/screen/components/write_screen.dart';
 import 'package:smu_flutter/screen/components/chat_screen.dart';
-import 'package:smu_flutter/screen/auth_logout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+// MeetScreen: 모임 화면
 class MeetScreen extends StatefulWidget {
   const MeetScreen({Key? key}) : super(key: key);
 
@@ -13,19 +15,14 @@ class MeetScreen extends StatefulWidget {
 class _MeetScreenState extends State<MeetScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<Map<String, String>> _teamMeetings = [
-    {'title': '11시 축구할 사람', 'subtitle': '축구 모임'},
-    {'title': '게시판 제목', 'subtitle': '팀별 프로젝트'},
-  ];
-  List<Map<String, String>> _individualMeetings = [
-    {'title': '11/11 14시 현용찬 회의', 'subtitle': '회의 및 개인 프로젝트'},
-    {'title': '11/20 16시 개인 회의', 'subtitle': '프로젝트 회의'},
-  ];
+  List<Map<String, String>> _teamMeetings = [];
+  List<Map<String, String>> _individualMeetings = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _fetchMeetings();
   }
 
   @override
@@ -34,7 +31,43 @@ class _MeetScreenState extends State<MeetScreen>
     super.dispose();
   }
 
-  void _addMeeting(String title, String subtitle, bool isTeamTab) {
+  Future<void> _fetchMeetings() async {
+    final teamSnapshot = await FirebaseFirestore.instance
+        .collection('meetings')
+        .where('type', isEqualTo: 'team')
+        .get();
+
+    final individualSnapshot = await FirebaseFirestore.instance
+        .collection('meetings')
+        .where('type', isEqualTo: 'individual')
+        .get();
+
+    setState(() {
+      _teamMeetings = teamSnapshot.docs
+          .map((doc) => {
+        'title': doc['title'] as String,
+        'subtitle': doc['subtitle'] as String,
+      })
+          .toList();
+
+      _individualMeetings = individualSnapshot.docs
+          .map((doc) => {
+        'title': doc['title'] as String,
+        'subtitle': doc['subtitle'] as String,
+      })
+          .toList();
+    });
+  }
+
+  Future<void> _addMeeting(String title, String subtitle, bool isTeamTab) async {
+    final type = isTeamTab ? 'team' : 'individual';
+
+    await FirebaseFirestore.instance.collection('meetings').add({
+      'title': title,
+      'subtitle': subtitle,
+      'type': type,
+    });
+
     setState(() {
       if (isTeamTab) {
         _teamMeetings.add({'title': title, 'subtitle': subtitle});
@@ -49,7 +82,6 @@ class _MeetScreenState extends State<MeetScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('모임'),
-
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -114,10 +146,11 @@ class _MeetScreenState extends State<MeetScreen>
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
+          final chatRoomId = title.hashCode.toString(); // 고유 chatRoomId 생성
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ChatScreen(),
+              builder: (context) => ChatScreen(chatRoomId: chatRoomId),
             ),
           );
         },
