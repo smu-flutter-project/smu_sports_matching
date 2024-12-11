@@ -98,7 +98,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('운동 시설 예약'),
+        title: Text(
+          '시설 안내',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,  // Set the font weight to bold
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
@@ -107,6 +112,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           image: DecorationImage(
             image: AssetImage('assets/img/main_background.jpg'),
             fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.4),
+              BlendMode.srcATop,
+            ),
           ),
         ),
         child: Column(
@@ -170,25 +179,49 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withOpacity(0.4),
                 ),
-                child: ListView.builder(
-                  itemCount: facilities.length,
-                  itemBuilder: (context, index) {
-                    final facility = facilities[index];
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),  // Add 10px pdding on left and right
+                  child: ListView.builder(
+                    itemCount: facilities.length,
+                    itemBuilder: (context, index) {
+                      final facility = facilities[index];
 
-                    return ListTile(
-                      title: Text(facility.name),
-                      subtitle: Text(facility.type),
-                      onTap: () {
-                        _navigateToNextScreen(
-                            facility.name, facility.address, facility.image);
-                      },
-                    );
-                  },
+                      return Container(
+                        width: 200,
+                        margin: EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.3),  // Set the background color to white with 60% opacity
+                          borderRadius: BorderRadius.circular(30),  // Apply a border radius of 20
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.8),  // Set the border color with trfnspfrency
+                            width: 10,  // Set the border thickness to 10
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),  // Add horizontal padding of 20 and vertical padding of 10
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text(facility.name),
+                              subtitle: Text(facility.type),
+                              onTap: () {
+                                _navigateToNextScreen(facility.name, facility.address, facility.image);
+                              },
+                            ),
+                            Divider(
+                              color: Colors.black,  // Color of the line
+                              thickness: 1,  // Thickness of the line
+                              height: 10,  // Height of the divider (space between ListTile items)
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -330,9 +363,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
         );
       },
     );
-  }
-
-  void _showRulesDialog() {
+  }  void _showRulesDialog() {
     showDialog(
       context: context,
       builder: (context) {

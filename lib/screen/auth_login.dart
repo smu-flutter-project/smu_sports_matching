@@ -117,18 +117,7 @@ class LoginWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true, // 제목을 가운데로 정렬
-        title: const Text(
-          "SMU Sports Matching⚽️",
-          style: TextStyle(
-            fontWeight: FontWeight.bold, // 텍스트를 진하게 설정
-            fontSize: 30,
-          ),
-        ),
 
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -193,7 +182,10 @@ class LoginButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), // 원하는 borderRadius 값 설정
+          ),
         ),
         onPressed: onPressed,
         child: Text(
