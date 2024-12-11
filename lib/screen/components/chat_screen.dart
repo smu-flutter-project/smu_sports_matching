@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao_sdk;
+import 'package:flutter/services.dart';
 
 class ChatScreen extends StatelessWidget {
   final String chatRoomId;
@@ -10,22 +12,47 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController _messageController = TextEditingController();
-    final User? currentUser = FirebaseAuth.instance.currentUser;
+    final firebase_auth.User? currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    String? kakaoNickname;
+
+    Future<void> fetchKakaoNickname() async {
+      try {
+        kakao_sdk.User user = await kakao_sdk.UserApi.instance.me();
+        kakaoNickname = user.kakaoAccount?.profile?.nickname;
+        print("카카오 닉네임: $kakaoNickname");
+      } catch (e) {
+        print("카카오 닉네임 가져오기 실패: $e");
+        kakaoNickname = "Unknown";
+      }
+    }
 
     void sendMessage() async {
       if (_messageController.text.trim().isEmpty) return;
+
+      // Ensure kakaoNickname is fetched before sending the message
+      if (kakaoNickname == null) {
+        await fetchKakaoNickname();
+      }
 
       await FirebaseFirestore.instance
           .collection('chatRooms')
           .doc(chatRoomId)
           .collection('messages')
           .add({
-        'sender': currentUser?.email ?? 'Unknown',
+        'sender': kakaoNickname ?? currentUser?.email ?? 'Unknown',
         'message': _messageController.text.trim(),
         'timestamp': FieldValue.serverTimestamp(),
       });
 
       _messageController.clear();
+    }
+
+    // Paste text from the system clipboard into the message input field
+    void pasteFromClipboard() async {
+      ClipboardData? clipboardData = await Clipboard.getData('text/plain');
+      if (clipboardData != null) {
+        _messageController.text = clipboardData.text ?? '';
+      }
     }
 
     return Scaffold(
@@ -75,6 +102,11 @@ class ChatScreen extends StatelessWidget {
                       border: OutlineInputBorder(),
                     ),
                   ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.paste),
+                  onPressed: pasteFromClipboard,
+                  tooltip: 'Paste from clipboard',
                 ),
                 const SizedBox(width: 8.0),
                 ElevatedButton(
