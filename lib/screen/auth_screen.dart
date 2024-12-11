@@ -18,7 +18,6 @@ class AuthScreen extends StatelessWidget{
           }
           return CircularProgressIndicator();
         }
-
     );
   }
 }

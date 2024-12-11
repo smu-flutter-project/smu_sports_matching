@@ -3,9 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as kakao_sdk;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:smu_flutter/screen/root_screen.dart';
 
 class LoginWidget extends StatelessWidget {
   LoginWidget({Key? key}) : super(key: key);
@@ -29,16 +27,8 @@ class LoginWidget extends StatelessWidget {
       showSnackBar(context, 'Google 로그인 성공');
       return true; // 로그인 성공
     } catch (e) {
-      showSnackBar(context, 'Google 로그인 실패: $e');
       return false; // 로그인 실패
     }
-  }
-
-  // Google 로그아웃 함수
-  Future<void> signOutGoogle(BuildContext context) async {
-    await firebase_auth.FirebaseAuth.instance.signOut();
-    await _googleSignIn.signOut();
-    showSnackBar(context, 'Google 로그아웃 성공');
   }
 
   // Kakao 로그인 함수
@@ -73,40 +63,6 @@ class LoginWidget extends StatelessWidget {
       });
     }
   }
-    //
-    //   if (await kakao_sdk.isKakaoTalkInstalled()) {
-    //     try {
-    //       await kakao_sdk.UserApi.instance.loginWithKakaoTalk();
-    //       showSnackBar(context, 'KakaoTalk 로그인 성공');
-    //     } catch (error) {
-    //       if (error is PlatformException && error.code == 'CANCELED') {
-    //         return false; // 사용자가 로그인 취소
-    //       }
-    //       await _loginWithKakaoAccount(context);
-    //     }
-    //   } else {
-    //     await _loginWithKakaoAccount(context);
-    //   }
-    //
-    //   // Kakao 로그인 성공 후 사용자 정보 가져오기
-    //   kakao_sdk.User user = await kakao_sdk.UserApi.instance.me();
-    //   print('사용자 정보: ${user.id}, ${user.kakaoAccount?.email}');
-    //   return true; // 로그인 성공
-    // } catch (e) {
-    //   showSnackBar(context, 'Kakao 로그인 실패: $e');
-    //   return false; // 로그인 실패
-
-  //
-  // // Kakao 계정으로 로그인
-  // Future<void> _loginWithKakaoAccount(BuildContext context) async {
-  //   try {
-  //     await kakao_sdk.UserApi.instance.loginWithKakaoAccount();
-  //     showSnackBar(context, 'Kakao 계정 로그인 성공');
-  //   } catch (e) {
-  //     showSnackBar(context, 'Kakao 계정 로그인 실패: $e');
-  //   }
-  // }
-
   // 공통 SnackBar 메시지 출력 함수
   void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -159,7 +115,6 @@ class LoginWidget extends StatelessWidget {
       Navigator.pushReplacementNamed(context, '/root');
     }
   }
-
 }
 
 // 공통 버튼 위젯

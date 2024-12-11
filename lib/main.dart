@@ -3,11 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import "package:smu_flutter/const/colors.dart";
 import 'package:smu_flutter/screen/root_screen.dart';
-import 'package:smu_flutter/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:smu_flutter/firebase_options.dart';
 import 'package:smu_flutter/screen/auth_screen.dart';
-import 'package:smu_flutter/screen/auth_login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
