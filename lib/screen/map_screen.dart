@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -12,34 +14,30 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
-  String? selectedTitle; // title 변수
-  String? selectedSnippet; // 장소 설명 변수
-  String? indoorOutdoor; // 실내외 변수
-
-  String? selectedDate; // 날짜 변수
-  String? selectedSport; // 스포츠 변수
-
-  // 지도 첫 화면 기준이 상명대 정문을 나타냄.
   final LatLng _center = const LatLng(36.832639013904, 127.17668625829);
-
-  // marker들을 list로 표현
   final List<Marker> _markers = [];
+  String? selectedTitle;
+  String? selectedSnippet;
 
   @override
   void initState() {
     super.initState();
     _initializeMarkers();
+    _shareLocation();
   }
 
   void _initializeMarkers() {
     _markers.addAll([
+      // Static place markers with red color
       Marker(
         markerId: const MarkerId('place1'),
         position: const LatLng(36.83231412298072, 127.1802609270142),
         infoWindow: const InfoWindow(
           title: "상명스포츠센터",
         ),
-        onTap: () => _onMarkerTapped("상명스포츠센터", "수영장, 스쿼시장, 헬스장, 무용실, 골프장", "실내"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        // Red marker
+        onTap: () => _onMarkerTapped("상명스포츠센터", "수영장, 스쿼시장, 헬스장, 무용실, 골프장"),
       ),
       Marker(
         markerId: const MarkerId('place2'),
@@ -47,7 +45,9 @@ class _MapScreenState extends State<MapScreen> {
         infoWindow: const InfoWindow(
           title: "운동장",
         ),
-        onTap: () => _onMarkerTapped("운동장", "운동장이에유", "실외"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        // Red marker
+        onTap: () => _onMarkerTapped("운동장", "운동장이에유"),
       ),
       Marker(
         markerId: const MarkerId('place3'),
@@ -55,7 +55,9 @@ class _MapScreenState extends State<MapScreen> {
         infoWindow: const InfoWindow(
           title: "농구장",
         ),
-        onTap: () => _onMarkerTapped("농구장", "실외 농구장이어유", "실외"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        // Red marker
+        onTap: () => _onMarkerTapped("농구장", "실외 농구장이어유"),
       ),
       Marker(
         markerId: const MarkerId('place4'),
@@ -63,106 +65,112 @@ class _MapScreenState extends State<MapScreen> {
         infoWindow: const InfoWindow(
           title: "체육관",
         ),
-        onTap: () => _onMarkerTapped("체육관", "실내 다양해유", "실내"),
-      ),
-
-      // 사람 마커에 대한 내용
-      Marker(
-        markerId: const MarkerId('human1'),
-        position: const LatLng(36.832139439004465, 127.17639102013793),
-        infoWindow: const InfoWindow(
-          title: "김준하",
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        onTap: () => _onPersonMarkerTapped("김준하", "11월 11일", "축구"),
-      ),
-      Marker(
-        markerId: const MarkerId('human2'),
-        position: const LatLng(36.83406247764723, 127.1792471408844),
-        infoWindow: const InfoWindow(
-          title: "김 연",
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        onTap: () => _onPersonMarkerTapped("김 연", "11월 12일", "농구"),
-      ),
-      Marker(
-        markerId: const MarkerId('human3'),
-        position: const LatLng(36.83135749542505, 127.17907011508942),
-        infoWindow: const InfoWindow(
-          title: "김민욱",
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        onTap: () => _onPersonMarkerTapped("김민욱", "11월 13일", "스쿼시"),
-      ),
-      Marker(
-        markerId: const MarkerId('human4'),
-        position: const LatLng(36.83262841961985, 127.181156873703),
-        infoWindow: const InfoWindow(
-          title: "현용찬",
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        onTap: () => _onPersonMarkerTapped("현용찬", "11월 21일", "농구"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        // Red marker
+        onTap: () => _onMarkerTapped("체육관", "실내 다양해유"),
       ),
     ]);
   }
 
-  // 장소 마커 선택
-  void _onMarkerTapped(String title, String snippet, String locationType) {
+  void _onMarkerTapped(String title, String snippet) {
     setState(() {
       selectedTitle = title;
       selectedSnippet = snippet;
-      indoorOutdoor = locationType;
-      selectedDate = null;
-      selectedSport = null;
     });
   }
 
-  // 사람 마커 선택
-  void _onPersonMarkerTapped(String title, String date, String sport) {
-    setState(() {
-      selectedTitle = title;
-      selectedDate = date;
-      selectedSport = sport;
-      indoorOutdoor = null;
-      selectedSnippet = null;
+  Future<void> _shareLocation() async {
+    // Check location permissions
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await Geolocator.requestPermission();
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+
+    // Get user location and update Firestore
+    Geolocator.getPositionStream().listen((Position position) {
+      FirebaseFirestore.instance
+          .collection('locations')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .set({
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'name': FirebaseAuth.instance.currentUser?.displayName ?? 'Unknown',
+        'isUser': true, // Mark this as a user marker
+      });
+
+      // Update the user's marker on the map
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(FirebaseAuth.instance.currentUser!.uid),
+            position: LatLng(position.latitude, position.longitude),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen), // Green marker for user
+            infoWindow: InfoWindow(
+              title: FirebaseAuth.instance.currentUser?.displayName ?? 'Me',
+            ),
+          ),
+        );
+      });
     });
   }
 
-  // google map
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-  }
 
-  Future<void> _signOutGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    try {
-      await FirebaseAuth.instance.signOut(); // Firebase 로그아웃
-      await googleSignIn.signOut(); // Google 로그아웃
-      print("User signed out successfully");
+    // Listen for updates to the `locations` collection
+    FirebaseFirestore.instance
+        .collection('locations')
+        .snapshots()
+        .listen((snapshot) {
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final userId = doc.id;
+        final LatLng userPosition = LatLng(data['latitude'], data['longitude']);
 
-      // 로그아웃 후 로그인 화면으로 이동
-      Navigator.pushReplacementNamed(context, "/auth");
-    } catch (e) {
-      print("Error during sign-out: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error during logout: $e')),
-      );
-    }
+        // Decide marker color based on `isUser` flag
+        BitmapDescriptor markerColor = (data['isUser'] == true)
+            ? BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen) // Green for users
+            : BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueBlue); // Blue for others
+
+        setState(() {
+          _markers.removeWhere((marker) => marker.markerId.value == userId);
+          _markers.add(
+            Marker(
+              markerId: MarkerId(userId),
+              position: userPosition,
+              icon: markerColor,
+              infoWindow: InfoWindow(title: data['name']),
+            ),
+          );
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appbar 제작
       appBar: AppBar(
-        title: const Text('상명대학교'),
-        backgroundColor: Colors.blue[500],
+        title: const Text('실시간 지도'),
+        backgroundColor: Colors.blue,
         actions: [
-          // 로그아웃 버튼 추가
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () async {
-              await _signOutGoogle(); // 로그아웃 실행
+              await FirebaseAuth.instance.signOut();
+              await GoogleSignIn().signOut();
+              Navigator.pushReplacementNamed(context, "/auth");
             },
           ),
         ],
@@ -177,9 +185,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             markers: Set<Marker>.of(_markers),
           ),
-
-          // title 값이 없을 경우, 하단에 아무것도 띄우지않음(full map)
-          if (selectedTitle != null)
+          if (selectedTitle != null && selectedSnippet != null)
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -209,30 +215,20 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     const SizedBox(height: 8),
 
-                    //사람 마커 선택시
-                    if (selectedSnippet != null)
-                      Text(
-                        selectedSnippet!,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                      ),
-                    if (indoorOutdoor != null)
-                      Text(
-                        indoorOutdoor!,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                      ),
-
                     // 장소 마커 선택시
-                    if (selectedDate != null && selectedSport != null)
+                    if (selectedSnippet != null && selectedTitle != null)
                       Column(
                         children: [
                           Text(
-                            selectedDate!,
-                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                            selectedSnippet!,
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[700]),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            selectedSport!,
-                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                            selectedTitle!,
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[700]),
                           ),
                         ],
                       ),
@@ -245,9 +241,6 @@ class _MapScreenState extends State<MapScreen> {
                             setState(() {
                               selectedTitle = null;
                               selectedSnippet = null;
-                              indoorOutdoor = null;
-                              selectedDate = null;
-                              selectedSport = null;
                             });
                           },
                           child: const Text('종료'),
