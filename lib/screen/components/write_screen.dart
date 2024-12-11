@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// 글쓰기 화면
+// WriteScreen: 글쓰기 화면
 class WriteScreen extends StatefulWidget {
   const WriteScreen({
     Key? key,
