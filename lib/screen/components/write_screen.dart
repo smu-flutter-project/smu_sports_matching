@@ -29,9 +29,11 @@ class _WriteScreenState extends State<WriteScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('글 쓰기'),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+
         child: Column(
           children: [
             TextField(
@@ -40,6 +42,8 @@ class _WriteScreenState extends State<WriteScreen> {
               decoration: InputDecoration(
                 hintText: widget.isTeamTab ? '팀 모집 내용 입력' : '개인 일정 입력',
                 border: const OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white
               ),
             ),
             const SizedBox(height: 16.0),
@@ -54,7 +58,13 @@ class _WriteScreenState extends State<WriteScreen> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('완료'),
+              child: const Text('완료',style: TextStyle(
+                color: Colors.black,
+
+              ),
+              ),style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white, // 배경색을 흰색으로 설정
+            ),
             ),
           ],
         ),

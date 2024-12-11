@@ -57,7 +57,14 @@ class ChatScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('채팅'),
+        backgroundColor: Colors.white,  // AppBar 배경색을 흰색으로 설정
+        title: const Text(
+          '채팅',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,  // Set the font weight to bold
+            color: Colors.black,  // 텍스트 색을 검정으로 설정 (기본적으로 흰색 배경에 검정색 텍스트가 보임)
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -81,9 +88,39 @@ class ChatScreen extends StatelessWidget {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    return ListTile(
-                      title: Text(message['sender']),
-                      subtitle: Text(message['message']),
+                    final isCurrentUser = (message['sender'] == (kakaoNickname ?? currentUser?.email ?? 'Unknown'));
+
+                    return Align(
+                      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: isCurrentUser ? Colors.blue.shade100 : Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+
+                        child: Column(
+
+                          crossAxisAlignment:
+                          isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              message['sender'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isCurrentUser ? Colors.blue : Colors.black,
+
+                              ),
+                            ),
+                            const SizedBox(height: 4.0),
+                            Text(
+                              message['message'],
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 );
@@ -111,7 +148,16 @@ class ChatScreen extends StatelessWidget {
                 const SizedBox(width: 8.0),
                 ElevatedButton(
                   onPressed: sendMessage,
-                  child: const Text('전송'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,  // 배경색을 흰색으로 설정
+                    side: BorderSide(color: Colors.black),  // 버튼 테두리를 검정색으로 설정 (선택사항)
+                  ),
+                  child: const Text(
+                    '전송',
+                    style: TextStyle(
+                      color: Colors.black,  // 텍스트 색을 검정색으로 설정 (흰색 배경에 잘 보이게)
+                    ),
+                  ),
                 ),
               ],
             ),
