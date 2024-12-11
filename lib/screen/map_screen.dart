@@ -155,8 +155,11 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       // appbar 제작
       appBar: AppBar(
-        title: const Text('상명대학교'),
-        backgroundColor: Colors.blue[500],
+        title: const Text('상명대학교', style: TextStyle(
+          fontWeight: FontWeight.bold,  // Set the font weight to bold
+        ),),
+
+        backgroundColor: Colors.white,
         actions: [
           // 로그아웃 버튼 추가
           IconButton(

@@ -81,7 +81,10 @@ class _MeetScreenState extends State<MeetScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('모임'),
+        title: const Text('모임', style: TextStyle(
+          fontWeight: FontWeight.bold,  // Set the font weight to bold
+        ),),
+        backgroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -141,6 +144,7 @@ class _MeetScreenState extends State<MeetScreen>
   Widget _buildMeetingCard(String title, String subtitle) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
+      color: Colors.white, // 배경색을 흰색으로 설정
       child: ListTile(
         title: Text(title),
         subtitle: Text(subtitle),

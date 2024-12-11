@@ -104,7 +104,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             fontWeight: FontWeight.bold,  // Set the font weight to bold
           ),
         ),
-        centerTitle: true,
+        centerTitle: false,
         backgroundColor: Colors.white,
       ),
       body: Container(
@@ -452,6 +452,7 @@ class _CalendarScreen2State extends State<CalendarScreen2> {
       appBar: AppBar(
         title: Text(widget.facilityName),
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
           child: Column(

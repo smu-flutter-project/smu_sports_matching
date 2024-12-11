@@ -57,7 +57,9 @@ class ChatScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('채팅'),
+        title: const Text('채팅', style: TextStyle(
+          fontWeight: FontWeight.bold,  // Set the font weight to bold
+        ),),
       ),
       body: Column(
         children: [
@@ -81,9 +83,39 @@ class ChatScreen extends StatelessWidget {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    return ListTile(
-                      title: Text(message['sender']),
-                      subtitle: Text(message['message']),
+                    final isCurrentUser = (message['sender'] == (kakaoNickname ?? currentUser?.email ?? 'Unknown'));
+
+                    return Align(
+                      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: isCurrentUser ? Colors.blue.shade100 : Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+
+                        child: Column(
+
+                          crossAxisAlignment:
+                          isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              message['sender'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isCurrentUser ? Colors.blue : Colors.black,
+
+                              ),
+                            ),
+                            const SizedBox(height: 4.0),
+                            Text(
+                              message['message'],
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 );
