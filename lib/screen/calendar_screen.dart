@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 
 class SportsFacility {
@@ -98,14 +100,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '시설 안내',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,  // Set the font weight to bold
-          ),
-        ),
-        centerTitle: false,
+        title: const Text('시설 안내'),
         backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              await GoogleSignIn().signOut();
+              Navigator.pushReplacementNamed(context, "/auth");
+            },
+          ),
+        ],
+        centerTitle: false,
       ),
       body: Container(
         decoration: BoxDecoration(

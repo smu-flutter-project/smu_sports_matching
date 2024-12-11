@@ -162,12 +162,8 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
-        title: const Text('실시간 지도'),
+        title: const Text('위치'),
         backgroundColor: Colors.white,
-
-       
-
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
