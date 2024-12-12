@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:smu_flutter/screen/map_screen.dart';
 import 'package:smu_flutter/screen/meet_screen.dart';
 import 'package:smu_flutter/screen/calendar_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Firebase 인증
-import 'package:google_sign_in/google_sign_in.dart'; // Google 로그아웃
 
 class RootScreen extends StatefulWidget {
   const RootScreen({Key? key}) : super(key: key);
@@ -39,8 +36,8 @@ class _RootScreenState extends State<RootScreen> with TickerProviderStateMixin {
     return Scaffold(
       body: TabBarView(
         controller: controller,
-        physics: const NeverScrollableScrollPhysics(), // 드래그 비활성화
-        children: renderChildren(), // 각 탭에 해당하는 화면 반환
+        physics: const NeverScrollableScrollPhysics(),
+        children: renderChildren(),
       ),
       bottomNavigationBar: renderBottomNavigation(),
     );

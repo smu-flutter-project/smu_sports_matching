@@ -14,10 +14,11 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
+  // 자동으로 그 위치 띄우기
   final LatLng _center = const LatLng(36.832639013904, 127.17668625829);
   final List<Marker> _markers = [];
   String? selectedTitle;
-  String? selectedSnippet;
+  String? selectedContext;
 
   @override
   void initState() {
@@ -26,9 +27,9 @@ class _MapScreenState extends State<MapScreen> {
     _shareLocation();
   }
 
+  // 장소 마커
   void _initializeMarkers() {
     _markers.addAll([
-      // Static place markers with red color
       Marker(
         markerId: const MarkerId('place1'),
         position: const LatLng(36.83231412298072, 127.1802609270142),
@@ -72,15 +73,16 @@ class _MapScreenState extends State<MapScreen> {
     ]);
   }
 
-  void _onMarkerTapped(String title, String snippet) {
+  // 장소 마커 선택 함수
+  void _onMarkerTapped(String title, String context) {
     setState(() {
       selectedTitle = title;
-      selectedSnippet = snippet;
+      selectedContext = context;
     });
   }
 
+  // 위치 공유
   Future<void> _shareLocation() async {
-    // Check location permissions
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await Geolocator.requestPermission();
@@ -94,7 +96,7 @@ class _MapScreenState extends State<MapScreen> {
       }
     }
 
-    // Get user location and update Firestore
+    // 파이어베이스 업로드
     Geolocator.getPositionStream().listen((Position position) {
       FirebaseFirestore.instance
           .collection('locations')
@@ -103,17 +105,16 @@ class _MapScreenState extends State<MapScreen> {
         'latitude': position.latitude,
         'longitude': position.longitude,
         'name': FirebaseAuth.instance.currentUser?.displayName ?? 'Unknown',
-        'isUser': true, // Mark this as a user marker
+        'isUser': true,
       });
 
-      // Update the user's marker on the map
       setState(() {
         _markers.add(
           Marker(
             markerId: MarkerId(FirebaseAuth.instance.currentUser!.uid),
             position: LatLng(position.latitude, position.longitude),
             icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen), // Green marker for user
+                BitmapDescriptor.hueGreen),
             infoWindow: InfoWindow(
               title: FirebaseAuth.instance.currentUser?.displayName ?? 'Me',
             ),
@@ -126,7 +127,6 @@ class _MapScreenState extends State<MapScreen> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
 
-    // Listen for updates to the `locations` collection
     FirebaseFirestore.instance
         .collection('locations')
         .snapshots()
@@ -136,12 +136,11 @@ class _MapScreenState extends State<MapScreen> {
         final userId = doc.id;
         final LatLng userPosition = LatLng(data['latitude'], data['longitude']);
 
-        // Decide marker color based on `isUser` flag
         BitmapDescriptor markerColor = (data['isUser'] == true)
             ? BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen) // Green for users
+                BitmapDescriptor.hueGreen)
             : BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueBlue); // Blue for others
+                BitmapDescriptor.hueBlue);
 
         setState(() {
           _markers.removeWhere((marker) => marker.markerId.value == userId);
@@ -185,7 +184,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             markers: Set<Marker>.of(_markers),
           ),
-          if (selectedTitle != null && selectedSnippet != null)
+          if (selectedTitle != null && selectedContext != null)
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -216,11 +215,11 @@ class _MapScreenState extends State<MapScreen> {
                     const SizedBox(height: 8),
 
                     // 장소 마커 선택시
-                    if (selectedSnippet != null && selectedTitle != null)
+                    if (selectedContext != null && selectedTitle != null)
                       Column(
                         children: [
                           Text(
-                            selectedSnippet!,
+                            selectedContext!,
                             style: TextStyle(
                                 fontSize: 14, color: Colors.grey[700]),
                           ),
@@ -240,7 +239,7 @@ class _MapScreenState extends State<MapScreen> {
                           onPressed: () {
                             setState(() {
                               selectedTitle = null;
-                              selectedSnippet = null;
+                              selectedContext = null;
                             });
                           },
                           child: const Text('종료'),

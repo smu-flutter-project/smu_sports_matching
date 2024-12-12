@@ -5,7 +5,6 @@ import 'package:smu_flutter/screen/components/write_screen.dart';
 import 'package:smu_flutter/screen/components/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// MeetScreen: 미팅 화면
 class MeetScreen extends StatefulWidget {
   const MeetScreen({Key? key}) : super(key: key);
 
@@ -43,27 +42,26 @@ class _MeetScreenState extends State<MeetScreen>
         .where('type', isEqualTo: 'individual')
         .get();
 
+    // setState와 map함수를 사용하여 나열
     setState(() {
       _teamMeetings = teamSnapshot.docs
-          .map((doc) =>
-      {
-        'title': doc['title'] as String,
-        'subtitle': doc['subtitle'] as String,
-      })
+          .map((doc) => {
+                'title': doc['title'] as String,
+                'subtitle': doc['subtitle'] as String,
+              })
           .toList();
 
       _individualMeetings = individualSnapshot.docs
-          .map((doc) =>
-      {
-        'title': doc['title'] as String,
-        'subtitle': doc['subtitle'] as String,
-      })
+          .map((doc) => {
+                'title': doc['title'] as String,
+                'subtitle': doc['subtitle'] as String,
+              })
           .toList();
     });
   }
 
-  Future<void> _addMeeting(String title, String subtitle,
-      bool isTeamTab) async {
+  Future<void> _addMeeting(
+      String title, String subtitle, bool isTeamTab) async {
     final type = isTeamTab ? 'team' : 'individual';
 
     await FirebaseFirestore.instance.collection('meetings').add({
@@ -85,9 +83,12 @@ class _MeetScreenState extends State<MeetScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text('모임', style: TextStyle(
-              fontWeight: FontWeight.bold, // Set the font weight to bold
-            ),),
+            title: const Text(
+              '모임',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             backgroundColor: Colors.white,
             bottom: TabBar(
               controller: _tabController,
@@ -119,14 +120,17 @@ class _MeetScreenState extends State<MeetScreen>
                   );
                 },
               ),
-            ]),
+            ]
+        ),
+
         body: TabBarView(
           controller: _tabController,
           children: [
             _buildTeamTab(),
             _buildIndividualTab(),
           ],
-        ));
+        )
+    );
   }
 
   Widget _buildTeamTab() {
@@ -154,13 +158,14 @@ class _MeetScreenState extends State<MeetScreen>
   Widget _buildMeetingCard(String title, String subtitle) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
-      color: Colors.white, // 배경색을 흰색으로 설정
+      color: Colors.white,
       child: ListTile(
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
-          final chatRoomId = title.hashCode.toString(); // 고유 chatRoomId 생성
+          // 고유 chatRoomId 생성
+          final chatRoomId = title.hashCode.toString();
           Navigator.push(
             context,
             MaterialPageRoute(

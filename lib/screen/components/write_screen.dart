@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// WriteScreen: 글쓰기 화면
 class WriteScreen extends StatefulWidget {
   const WriteScreen({
     Key? key,
@@ -33,18 +32,16 @@ class _WriteScreenState extends State<WriteScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-
         child: Column(
           children: [
             TextField(
               controller: _textController,
               maxLines: 5,
               decoration: InputDecoration(
-                hintText: widget.isTeamTab ? '팀 모집 내용 입력' : '개인 일정 입력',
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white
-              ),
+                  hintText: widget.isTeamTab ? '팀 모집 내용 입력' : '개인 일정 입력',
+                  border: const OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
@@ -58,13 +55,15 @@ class _WriteScreenState extends State<WriteScreen> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('완료',style: TextStyle(
-                color: Colors.black,
-
+              child: const Text(
+                '완료',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
               ),
-              ),style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white, // 배경색을 흰색으로 설정
-            ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
             ),
           ],
         ),
